@@ -1,0 +1,40 @@
+.container {
+	width: 100vw;
+	height: 100vh;
+	-webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: none;
+  -ms-text-size-adjust: 100%;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding-left: 25px;
+  padding-right: 25px;
+  display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.row {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+}
+
+input {
+	height: 40px;
+	width: 300px;
+	border-radius: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin: auto 10px auto 10px;
+
+}
+
+button {
+	height: 40px;
+	width: auto;
+	border-radius: 20px;
+	background-color: #a3006a;
+	margin: auto 10px auto 10px;
+}

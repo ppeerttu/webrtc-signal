@@ -1,0 +1,18 @@
+{
+  "name": "testclient",
+  "homepage": "https://github.com/ppeerttu/webrtc-signal",
+  "authors": [
+    "ppeerttu <perttu.karna@gmail.com>"
+  ],
+  "description": "Browser client for testing socket.io communication",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

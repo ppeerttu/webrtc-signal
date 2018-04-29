@@ -4,8 +4,17 @@
   "description": "A signaling and application server for WebRTC clients",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "author": "Perttu Kärnä",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^1.17.3",
+    "pg": "^7.4.1",
+    "pg-hstore": "^2.3.2",
+    "restify": "^7.1.1",
+    "sequelize": "^5.0.0-beta.4",
+    "socket.io": "^2.1.0"
+  }
 }
