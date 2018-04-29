@@ -1,0 +1,11 @@
+{
+  "name": "webrtc-signal",
+  "version": "0.1.0",
+  "description": "A signaling and application server for WebRTC clients",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Perttu Kärnä",
+  "license": "ISC"
+}
