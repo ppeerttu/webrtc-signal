@@ -10,11 +10,20 @@
   "author": "Perttu Kärnä",
   "license": "ISC",
   "dependencies": {
+    "bunyan": "^1.8.12",
+    "jsonwebtoken": "^8.2.1",
     "nodemon": "^1.17.3",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
     "restify": "^7.1.1",
+    "restify-cors-middleware": "^1.1.0",
     "sequelize": "^5.0.0-beta.4",
-    "socket.io": "^2.1.0"
+    "socket.io": "^2.1.0",
+    "winston": "^2.4.2"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "./testclient"
+    ]
   }
 }

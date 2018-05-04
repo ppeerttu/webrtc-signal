@@ -1,21 +1,39 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>Testing socket.io</title>
     <link rel="stylesheet" href="./styles.css" type="text/css" />
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <script src="./bower_components/socket.io-client/dist/socket.io.js"></script>
     <script src="./index.js"></script>
   </head>
   <body>
     <div class="container">
       <div class="header">
-        <h1>Testing socket.io</h1>
+        <h1>Testing socket.io WebRTC</h1>
       </div>
-      <div class="input-message">
+      <div class="video-container">
+        <video autoplay id="remoteVideo"></video>
+        <video autoplay id="localVideo"></video>
+      </div>
+      <div>
+        <input type="text" placeholder="Your username" id="my-uname" />
+      </div>
+      <!-- <div class="input-message">
         <div class="row">
           <input type="text" placeholder="Type" id="msg-type" />
           <input type="text" placeholder="Message" id="msg" />
           <button type="button" id="send">Send</button>
         </div>
+      </div> -->
+      <div style="margin: 1em auto;">
+        <button type="button" class="btn-blue" id="init">Login</button>
+        <button type="button" class="btn-green" id="answer">Answer</button>
+        <button type="button" class="btn-red"id="decline">Decline</button>
+      </div>
+      <div>
+        <input type="text" placeholder="Username" id="uname" />
+        <button type="button" class="btn-blue" id="call">Call</button>
       </div>
       <div class="response-container">
         <div class="header">

@@ -1,6 +1,6 @@
 .container {
 	width: 100vw;
-	height: 100vh;
+	min-height: 100vh;
 	-webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: none;
   -ms-text-size-adjust: 100%;
@@ -28,13 +28,61 @@ input {
 	padding-left: 10px;
 	padding-right: 10px;
 	margin: auto 10px auto 10px;
-
 }
 
 button {
 	height: 40px;
+	min-width: 80px;
+	color: white;
 	width: auto;
 	border-radius: 20px;
 	background-color: #a3006a;
 	margin: auto 10px auto 10px;
+}
+
+
+.btn-blue {
+	background-color: #0a94ff;
+}
+
+.btn-green {
+	background-color: #03b500;
+}
+
+.btn-red {
+	background-color: #b50000;
+}
+
+.video-container {
+	width: 400px;
+	height: 300px;
+	border: solid 2px black;
+	margin-bottom: 1em;
+	position: relative;
+}
+
+.video-container #remoteVideo {
+	display: none;
+	height: inherit;
+	width: inherit;
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 50;
+}
+
+.video-container #localVideo {
+	display: none;
+	height: 75px;
+	width: 100px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 100;
+	border: solid 2px black;
+}
+
+.messages {
+	max-width: 80vw;
+	overflow-x: scroll;
 }
