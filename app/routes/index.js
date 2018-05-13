@@ -20,14 +20,14 @@ module.exports = server => {
 
     let user = tempUsers[username];
     if (!user) {
-      return res.send(400);
+      return res.send(404);
     }
 
     let token = jwt.sign({ data: user }, secretKey, {
       expiresIn: '1h'
     });
 
-    res.send({ token });
+    res.send({ token, user });
     next();
   });
 
