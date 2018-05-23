@@ -1,6 +1,6 @@
 const restify = require('restify');
 const corsMiddleware = require('restify-cors-middleware');
-const SignalHandler = require('./app/lib/SignalHandler');
+const SignalHandler = require('./app/SignalHandler');
 const config = require('./config')[process.env.NODE_ENV];
 const pjson = require('./package.json');
 const bindRoutes = require('./app/routes');
@@ -39,5 +39,5 @@ const signalHandler = new SignalHandler(server);
 const port = config.httpPort || 3000;
 
 server.listen(port, () => {
-  console.log('Listening to port ' + port);
+  logger.add('warn', 'Listening to port ' + port);
 });
