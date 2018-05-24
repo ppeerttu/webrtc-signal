@@ -22,7 +22,7 @@ const desktopConstraints = {
       maxHeight:900
     }
   },
-  audio: false
+  audio: true
 };
 
 // constraints for mobile browser

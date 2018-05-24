@@ -35,7 +35,7 @@ class SignalClient {
   }
 
   placeAnswer(answer) {
-    this.caller.emit('answer', { answer });
+    this.caller.socket.emit('answer', { answer });
     if (answer) {
       this.state = states.CONNECTED;
       this.caller.state = states.CONNECTED;
@@ -46,12 +46,12 @@ class SignalClient {
 
   placeCandidate(candidate) {
     let to = this.caller || this.receiver;
-    if (to) to.emit('candidate', { candidate });
+    if (to) to.socket.emit('candidate', { candidate });
   }
 
   leaveCall() {
     let to = this.caller || this.receiver;
-    if (to) to.emit('leave');
+    if (to) to.socket.emit('leave');
     to._initState();
     this._initState();
   }
