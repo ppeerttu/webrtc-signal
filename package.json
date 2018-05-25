@@ -4,7 +4,8 @@
   "description": "A signaling and application server for WebRTC clients",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:ci": "jest --watchAll",
     "start": "nodemon index.js"
   },
   "author": "Perttu Kärnä",
@@ -25,5 +26,28 @@
     "ignore": [
       "./testclient"
     ]
+  },
+  "devDependencies": {
+    "jest": "^23.0.0",
+    "jest-junit": "^4.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "cobertura"
+    ],
+    "collectCoverageFrom": [
+      "app/SignalClient/*",
+      "app/SignalHandler/*"
+    ],
+    "coverageDirectory": "./shippable/codecoverage",
+    "testResultsProcessor": "./node_modules/jest-junit"
+  },
+  "jest-junit": {
+    "output": "./shippable/testresults/junit.xml"
   }
 }

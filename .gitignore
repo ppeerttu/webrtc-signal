@@ -3,3 +3,4 @@ testclient/.cache
 testclient/bower_components
 testclient/dist
 .env
+shippable

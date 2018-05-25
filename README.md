@@ -1,10 +1,10 @@
 # webrtc-signal
 
-A signaling server for WebRTC clients.
+A signal server for WebRTC clients.
 
 ## Details
 
-This server is used for signaling WebRTC clients. During the early steps of this project this server might expose some REST APIs for development needs.
+This server is used for signal WebRTC clients. During the early steps of this project this server might expose some REST APIs for development needs.
 
 ### Requirements
 
@@ -19,7 +19,7 @@ This server is used for signaling WebRTC clients. During the early steps of this
 
 ## Running the project
 
-Currently only in development environment.
+### Development environment
 
 **In project root:**
 
@@ -27,5 +27,9 @@ Currently only in development environment.
 2. Build the server container: `docker-compose build`
 3. Run the container: `docker-compose up`
     * With `-d` flag for running in background
-4. For test browser client, open another terminal window (if needed) and `cd` to `testclient` and run `parcel index.html`
+4. For testing browser client, open another terminal window (if needed) and `cd` to `testclient` and run `parcel index.html`
     * As you can see, the client will be available at `http://localhost:1234`
+
+### Tests
+
+To run tests, install dependencies (see Development environment) and run `docker-compose -f docker-compose.test.yml up` to watch the files and run tests continously when changes detected.

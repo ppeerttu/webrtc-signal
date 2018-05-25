@@ -1,0 +1,13 @@
+version: "3"
+services:
+  signal:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run test:ci
+    container_name: signal_test
+    volumes:
+      - .:/usr/src
+    environment:
+      NODE_ENV: test
+      SECRET_KEY: $SECRET_KEY
