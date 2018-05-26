@@ -9,7 +9,7 @@ const logger = Logger.getInstance();
 class SignalHandler {
 
   constructor(server) {
-    if (!server) throw new TypeError('The SignalHandler requires a server to be passed as a constructor parameter!');
+    if (!server) throw new TypeError('The SignalHandler requires a server as a constructor parameter!');
 
     this.io = socketio(server.server, {
       path: '/signal',
@@ -132,7 +132,7 @@ class SignalHandler {
   getClientBySocketId(socketId) {
     const size = this.clients.length;
     for (let i = 0; i < size; i++) {
-      if (this.clients[i].id === socketId) {
+      if (this.clients[i].socket.id === socketId) {
         return this.clients[i];
       }
     }

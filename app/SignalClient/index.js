@@ -93,12 +93,18 @@ class SignalClient {
    */
   leaveCall() {
     let to = this.caller || this.receiver;
-    if (to) to.socket.emit('leave');
-    to._initState();
+    if (to) {
+      to.socket.emit('leave');
+      to._initState();
+    }
     this._initState();
   }
 
   set caller(caller) {
+    if (
+      !(caller instanceof SignalClient)
+      && caller !== null
+    ) throw new TypeError('Invalid type!');
     this._caller = caller;
   }
 
@@ -107,7 +113,10 @@ class SignalClient {
   }
 
   set receiver(receiver) {
-    if (!(receiver instanceof SignalClient)) throw new TypeError('Invalid type!');
+    if (
+      !(receiver instanceof SignalClient)
+      && receiver !== null
+    ) throw new TypeError('Invalid type!');
     this._receiver = receiver;
   }
 

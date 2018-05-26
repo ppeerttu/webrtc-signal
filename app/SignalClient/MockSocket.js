@@ -5,8 +5,9 @@ const EventEmitter = require('events');
  */
 class MockSocket extends EventEmitter {
 
-  constructor() {
+  constructor(id = '123') {
     super();
+    this.id = id;
   }
 
   /**
