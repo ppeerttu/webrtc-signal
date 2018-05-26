@@ -1,5 +1,5 @@
 # Language setting
-language: node_js
+language: nodejs
 
 branches:
   only:
@@ -15,3 +15,11 @@ build:
     - node -v
     - npm install
     - npm test
+
+integrations:
+  notifications:
+    - integrationName: email
+      type: email
+      branches:
+        only:
+          - master
