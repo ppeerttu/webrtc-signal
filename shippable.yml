@@ -1,5 +1,8 @@
 # Language setting
-language: nodejs
+language: node_js
+
+node_js:
+  - 9.11.1
 
 branches:
   only:
