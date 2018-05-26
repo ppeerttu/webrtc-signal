@@ -15,8 +15,3 @@ build:
     - node -v
     - npm install
     - npm test
-
-integrations:
-  hub:
-    - integrationName: DockerRegistryIntegration
-      type: dockerRegistryLogin
