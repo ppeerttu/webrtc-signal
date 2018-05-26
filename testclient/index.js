@@ -18,11 +18,11 @@ let myUname, myConnection, constraints, stream, loggedIn = false;
 const desktopConstraints = {
   video: {
     mandatory: {
-      maxWidth:1200,
-      maxHeight:900
+      maxWidth: 1200,
+      maxHeight: 900
     }
   },
-  audio: false
+  audio: true
 };
 
 // constraints for mobile browser

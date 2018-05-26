@@ -1,0 +1,22 @@
+# Language setting
+language: node_js
+
+branches:
+  only:
+    - master
+    - development
+
+env:
+  global:
+    - NODE_ENV=test
+build:
+  ci:
+    - npm -v
+    - node -v
+    - npm install
+    - npm test
+
+integrations:
+  hub:
+    - integrationName: DockerRegistryIntegration
+      type: dockerRegistryLogin
