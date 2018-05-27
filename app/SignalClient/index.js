@@ -30,6 +30,7 @@ class SignalClient {
    * both this and the receiver accordingly.
    * @param {SignalClient} receiver The receiver of the call
    * @param {Object} offer The WebRTC offer object
+   * @throws {TypeError} Received invalid parameters
    */
   placeCall(receiver, offer) {
     if (
@@ -56,12 +57,10 @@ class SignalClient {
   /**
    * Place an answer to the caller and change states accordingly.
    * @param {Object|boolean} answer The answer for the call (boolean false acceptable)
+   * @throws {TypeError} Received invalid parameter
    */
   placeAnswer(answer) {
-    if (
-      (typeof answer === 'boolean' && answer)
-      || (typeof answer !== 'boolean' && typeof answer !== 'object')
-    ) throw new TypeError(
+    if (answer !== false && typeof answer !== 'object') throw new TypeError(
       'Expected to receive an instance of object or boolean value false' +
       ' but received ' + answer
     );
@@ -70,16 +69,18 @@ class SignalClient {
       this.caller.socket.emit('answer', { answer });
       this.state = states.CONNECTED;
       this.caller.state = states.CONNECTED;
-      return;
+    } else if (this.caller) {
+      this.caller._initState();
+      this._initState();
+    } else {
+      throw new Error('Caller not found!');
     }
-
-    this._initState();
-    if (this.caller) this.caller._initState();
   }
 
   /**
    * Send a candidate to the client
    * @param {Object} candidate The WebRTC candidate object
+   * @throws {TypeError} Received invalid parameter
    */
   placeCandidate(candidate) {
     if (typeof candidate !== 'object') throw new TypeError('Expected to receive an object but received ' + candidate);

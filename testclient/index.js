@@ -79,7 +79,7 @@ setTimeout(() => {
             path: '/signal',
             reconnection: false,
             query: {
-              token: data.token
+              token: 'djsjdisjdisjids'
             }
           });
           bindSocketListeners(socket);

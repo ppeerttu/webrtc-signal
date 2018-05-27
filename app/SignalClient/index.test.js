@@ -169,7 +169,7 @@ describe('SignalClient', () => {
     beforeAll(() => {
       caller = new SignalClient(new MockSocket(), 'caller');
       receiver = new SignalClient(new MockSocket(), 'receiver');
-      
+
       caller._initState = jest.fn();
       receiver._initState = jest.fn();
       caller.socket.emit = jest.fn();
@@ -193,9 +193,10 @@ describe('SignalClient', () => {
       }).toThrow();
     });
 
-    test('Should call _initState if no caller specified', () => {
-      receiver.placeAnswer({});
-      expect(receiver._initState).toHaveBeenCalledTimes(1);
+    test('Should throw an error when no receiver set', () => {
+      expect(() => {
+        receiver.placeAnswer({});
+      }).toThrow();
     });
 
     test('Should call _initState if receiving false as an answer', () => {
@@ -203,7 +204,7 @@ describe('SignalClient', () => {
       receiver.placeAnswer(false);
 
       expect(caller._initState).toHaveBeenCalledTimes(1);
-      expect(receiver._initState).toHaveBeenCalledTimes(2);
+      expect(receiver._initState).toHaveBeenCalledTimes(1);
     });
 
     test('Should change the states for participants into CONNECTED', () => {

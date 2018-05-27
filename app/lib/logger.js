@@ -37,14 +37,7 @@ class Logger {
    */
   static getInstance() {
     if (instance === null || !instance.logger) {
-      console.warn(new Date().toLocaleDateString(process.env.ZD_LANG, {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric'
-      }) + ' -- Initializing logger...');
+      console.warn('Initializing logger...');
       instance = new Logger();
     }
     return instance;
