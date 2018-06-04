@@ -26,7 +26,10 @@ class SignalHandler {
    * Initialize the handler
    */
   _init() {
-    this.io.on('connection', this.manageConnection);
+    const _handler = this;
+    this.io.on('connection', socket => {
+      _handler.manageConnection(socket);
+    });
   }
 
   /**
@@ -55,7 +58,7 @@ class SignalHandler {
 
     // { username: <username> }
     socket.on('answer', data => {
-      _handler.mangeAnswer(client, data);
+      _handler.manageAnswer(client, data);
     });
 
     // { username: <username>, candidate: <candidate> }
