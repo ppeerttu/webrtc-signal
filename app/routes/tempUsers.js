@@ -13,6 +13,14 @@ module.exports = {
     firstName: 'Test',
     lastName: 'User',
     password: 'thiswillbesecrettoo',
-    id: 1
+    id: 2
+  },
+  MickeyMock: {
+    username: 'MickeyMock',
+    email: 'mickey@mock',
+    firstName: 'Mickey',
+    lastName: 'Mock',
+    password: 'anothersecret',
+    id: 3
   }
 };

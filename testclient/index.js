@@ -18,11 +18,11 @@ let myUname, myConnection, constraints, stream, loggedIn = false;
 const desktopConstraints = {
   video: {
     mandatory: {
-      maxWidth:1200,
-      maxHeight:900
+      maxWidth: 1200,
+      maxHeight: 900
     }
   },
-  audio: false
+  audio: true
 };
 
 // constraints for mobile browser
@@ -93,6 +93,8 @@ setTimeout(() => {
       .then(offer => {
         console.log(offer);
 
+        caller = { username: document.getElementById('uname').value, offer };
+
         socket.emit('call', { username: document.getElementById('uname').value, offer });
 
         myConnection.setLocalDescription(offer);
@@ -147,7 +149,12 @@ function bindSocketListeners(sock) {
           let localVideo = document.querySelector('#localVideo');
           let configuration = {
             'iceServers': [
-              { url:'stun:stun2.1.google.com:19302' }
+              { url: 'stun:stun2.1.google.com:19302' },
+              { url: 'stun:stun1.l.google.com:19302' },
+              { url: 'stun:stun1.voiceeclipse.net:3478' },
+              { url: 'stun:stun2.l.google.com:19302' },
+              { url: 'stun:stun3.l.google.com:19302' },
+              { url: 'stun:stun4.l.google.com:19302' }
             ]
           };
 
@@ -174,7 +181,10 @@ function bindSocketListeners(sock) {
 
           myConnection.onicecandidate = (event) => {
             console.log('candidate', event);
-            if (event.candidate) sock.emit('candidate', { username: caller.username, candidate: event.candidate });
+            if (event.candidate) {
+              console.log({ username: caller.username, candidate: event.candidate });
+              sock.emit('candidate', { username: caller.username, candidate: event.candidate });
+            }
           };
            //inserting our stream to the video tag
           localVideo.srcObject = localStream;

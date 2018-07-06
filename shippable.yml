@@ -1,0 +1,28 @@
+# Language setting
+language: node_js
+
+node_js:
+  - 9.11.1
+
+branches:
+  only:
+    - master
+    - development
+
+env:
+  global:
+    - NODE_ENV=test
+build:
+  ci:
+    - npm -v
+    - node -v
+    - npm install
+    - npm test
+
+integrations:
+  notifications:
+    - integrationName: email
+      type: email
+      branches:
+        only:
+          - master

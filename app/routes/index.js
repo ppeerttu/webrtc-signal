@@ -4,12 +4,12 @@ const tempUsers = require('./tempUsers');
 
 module.exports = server => {
 
-  server.get('/', (req, res, next) => {
+  server.get('/webrtc', (req, res, next) => {
     res.send({ message: 'Hello world!' });
     next();
   });
 
-  server.post('/api/auth', (req, res, next) => {
+  server.post('/webrtc/api/auth', (req, res, next) => {
 
     if (
       !req.body
@@ -20,14 +20,14 @@ module.exports = server => {
 
     let user = tempUsers[username];
     if (!user) {
-      return res.send(400);
+      return res.send(404);
     }
 
     let token = jwt.sign({ data: user }, secretKey, {
       expiresIn: '1h'
     });
 
-    res.send({ token });
+    res.send({ token, user });
     next();
   });
 
