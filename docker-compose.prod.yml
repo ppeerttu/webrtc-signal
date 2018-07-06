@@ -1,0 +1,13 @@
+version: "3"
+services:
+  signal:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    command: npm run start:prod
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: production
+      SECRET_KEY: $SECRET_KEY
