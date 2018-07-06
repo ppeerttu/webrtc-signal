@@ -4,12 +4,12 @@ const tempUsers = require('./tempUsers');
 
 module.exports = server => {
 
-  server.get('/', (req, res, next) => {
+  server.get('/webrtc', (req, res, next) => {
     res.send({ message: 'Hello world!' });
     next();
   });
 
-  server.post('/api/auth', (req, res, next) => {
+  server.post('/webrtc/api/auth', (req, res, next) => {
 
     if (
       !req.body
