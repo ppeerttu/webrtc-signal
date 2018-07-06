@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "test:ci": "jest --watchAll",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "start:prod": "node index.js"
   },
   "author": "Perttu Kärnä",
   "license": "ISC",

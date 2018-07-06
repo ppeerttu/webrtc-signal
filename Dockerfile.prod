@@ -1,0 +1,17 @@
+# App source directory
+WORKDIR /usr/src
+
+# Copy project definition files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install --quiet --only=production && npm cache clean --force
+
+# Copy application files
+COPY . .
+
+# Change the ownership of files to node user
+RUN chown -R node:node /usr/src/*
+USER node
+
+CMD ["node", "index.js"]
