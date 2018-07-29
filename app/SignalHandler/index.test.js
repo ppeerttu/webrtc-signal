@@ -252,4 +252,100 @@ describe('SignalHandler', () => {
       expect(handler.clients.length).toBe(2);
     });
   });
+
+  describe('saveCall', () => {
+    let handler;
+    beforeEach(() => {
+      handler = new SignalHandler({});
+      handler.clients.push(new SignalClient(new MockSocket('1'), 'Foo'));
+      handler.clients.push(new SignalClient(new MockSocket('2'), 'Bar'));
+      handler.clients.push(new SignalClient(new MockSocket('3'), 'Biz'));
+    });
+
+    test('Should throw an error if receiving invalid parameters', () => {
+      const caller = handler.clients[0];
+      const receiver = {};
+      expect(() => {
+        handler.saveCall(caller, receiver);
+      }).toThrow(TypeError);
+    });
+
+    test('Should add a new call with startedAt and answered properties to the callsOngoing', () => {
+      const caller = handler.clients[0];
+      const receiver = handler.clients[1];
+      expect(() => {
+        handler.saveCall(caller, receiver);
+      }).not.toThrow();
+
+      expect(handler.callsOngoing.length).toBe(1);
+      expect(handler.callsOngoing[0]).toHaveProperty('startedAt');
+      expect(handler.callsOngoing[0].answered).toBe(false);
+      expect(handler.callsOngoing[0].caller).toBe(caller);
+      expect(handler.callsOngoing[0].receiver).toBe(receiver);
+    });
+  });
+
+  describe('checkCallAnswered()', () => {
+    let handler;
+    beforeEach(() => {
+      handler = new SignalHandler({});
+      handler.clients.push(new SignalClient(new MockSocket('1'), 'Foo'));
+      handler.clients.push(new SignalClient(new MockSocket('2'), 'Bar'));
+      handler.clients.push(new SignalClient(new MockSocket('3'), 'Biz'));
+    });
+
+    test('Should throw an error if receiving invalid parameters', () => {
+      const caller = handler.clients[0];
+      const receiver = {};
+      expect(() => {
+        handler.checkCallAnswered(caller, receiver);
+      }).toThrow(TypeError);
+    });
+
+    test('Should check a call answered', () => {
+      const caller = handler.clients[0];
+      const receiver = handler.clients[1];
+      expect(() => {
+        handler.saveCall(caller, receiver);
+      }).not.toThrow();
+
+      expect(handler.callsOngoing[0].answered).toBe(false);
+      handler.checkCallAnswered(caller, receiver);
+      expect(handler.callsOngoing[0].answered).toBe(true);
+    });
+
+  });
+
+  describe('removeCall()', () => {
+    let handler;
+    beforeEach(() => {
+      handler = new SignalHandler({});
+      handler.clients.push(new SignalClient(new MockSocket('1'), 'Foo'));
+      handler.clients.push(new SignalClient(new MockSocket('2'), 'Bar'));
+      handler.clients.push(new SignalClient(new MockSocket('3'), 'Biz'));
+    });
+
+    test('Should throw an error if receiving invalid parameters', () => {
+      const caller = handler.clients[0];
+      const receiver = {};
+      expect(() => {
+        handler.removeCall({ caller, receiver });
+      }).toThrow(TypeError);
+    });
+
+    test('Should remove a call answered', () => {
+      const caller = handler.clients[0];
+      const receiver = handler.clients[1];
+      expect(() => {
+        handler.saveCall(caller, receiver);
+      }).not.toThrow();
+
+      expect(handler.callsOngoing.length).toBe(1);
+      expect(() => {
+        handler.removeCall(handler.callsOngoing[0]);
+      }).not.toThrow();
+      expect(handler.callsOngoing.length).toBe(0);
+    });
+
+  });
 });
