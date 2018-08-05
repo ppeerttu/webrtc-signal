@@ -43,7 +43,7 @@ class SignalHandler {
           }
         }
       });
-    });
+    }, 10000);
   }
 
   /**
@@ -127,7 +127,7 @@ class SignalHandler {
     if (receiver && receiver.state === states.IDLE) {
       try {
         client.placeCall(receiver, offer);
-        this.saveCall(caller, receiver);
+        this.saveCall(client, receiver);
       } catch(e) {
         logger.add('error', e);
         client.socket.emit('service_error', { type: errors.RECEIVER_NOT_FOUND });
