@@ -13,12 +13,12 @@ class SignalHandler {
     if (!server) throw new TypeError('The SignalHandler requires a server as a constructor parameter!');
 
     this.io = new SocketIO(server.server, {
-      path: '/signal',
+      path: '/webrtc/signal',
       origins: '*:*'
     });
     this.io.use(this.authenticate);
     this.clients = [];
-
+    this.callsOngoing = [];
     this._init();
   }
 
@@ -29,6 +29,20 @@ class SignalHandler {
     const _handler = this;
     this.io.on('connection', socket => {
       _handler.manageConnection(socket);
+    });
+
+    setInterval(() => {
+      _handler.callsOngoing.forEach(c => {
+        const calls = [];
+        if (!c.answered && (c.startedAt < (Date.now() - (30 * 1000)))) {
+          c.caller.leaveCall();
+          try {
+            _handler.removeCall(c);
+          } catch(e) {
+            logger.add('error', e);
+          }
+        }
+      });
     });
   }
 
@@ -67,7 +81,15 @@ class SignalHandler {
     });
 
     socket.on('leave', () => {
+      const call = this.callsOngoing.find(x => (x.caller === client || x.receiver === client));
       client.leaveCall();
+      if (call) {
+        try {
+          this.removeCall(call);
+        } catch(e) {
+          logger.add('error', e);
+        }
+      }
     });
 
     socket.on('disconnecting', reason => {
@@ -105,6 +127,7 @@ class SignalHandler {
     if (receiver && receiver.state === states.IDLE) {
       try {
         client.placeCall(receiver, offer);
+        this.saveCall(caller, receiver);
       } catch(e) {
         logger.add('error', e);
         client.socket.emit('service_error', { type: errors.RECEIVER_NOT_FOUND });
@@ -133,6 +156,9 @@ class SignalHandler {
 
     try {
       client.placeAnswer(answer);
+      if (!answer && client.caller) {
+        this.removeCall(client.caller, client);
+      }
     } catch(e) {
       logger.add('error', e);
       client.socket.emit('service_error', { type: errors.RECEIVER_NOT_FOUND });
@@ -166,6 +192,63 @@ class SignalHandler {
   }
 
   /**
+   * Save a call that has been placed between
+   * two clients
+   * @param {SignalClient} caller
+   * @param {SignalClient} handler
+   */
+  saveCall(caller, receiver) {
+    if (!(caller instanceof SignalClient) || !(receiver instanceof SignalClient)) {
+      throw new TypeError('Invalid parameters for SignalHandler.saveCall!');
+    }
+    // TODO: Check if there is a call already between these two clients etc...
+    this.callsOngoing.push({
+      caller,
+      receiver,
+      startedAt: Date.now(),
+      answered: false
+    });
+  }
+
+  /**
+   * Check that the call between these two clients
+   * has been answered
+   * @param {SignalClient} caller
+   * @param {SignalClient} receiver
+   */
+  checkCallAnswered(caller, receiver) {
+    if (!(caller instanceof SignalClient) || !(receiver instanceof SignalClient)) {
+      throw new TypeError('Invalid parameters for SignalHandler.saveCall!');
+    }
+
+    const call = this.callsOngoing.find(x => (x.caller === caller && x.receiver === receiver));
+    if (!call) {
+      logger.add(
+        'warn',
+        `Tried to find and check answered a call for caller ${caller.id} and receiver ${receiver.id} but none found!`
+      );
+    } else {
+      call.answered = true;
+    }
+  }
+
+  /**
+   * Remove a call from SignalHandlers
+   * callsOngoing list.
+   * @param {object} call
+   */
+  removeCall(call) {
+    if (
+      !call
+      || !(call.caller instanceof SignalClient)
+      || !(call.receiver instanceof SignalClient)
+    ) {
+      throw new TypeError('Invalid parameters for SignalHandler.saveCall!');
+    }
+    this.callsOngoing.splice(this.callsOngoing.indexOf(call), 1);
+  }
+
+  /**
    * Handle actions for the client that is going to disconnect.
    * @param {SignalClient} client The client object
    * @param {string} reason The reason of disconnecting
@@ -174,6 +257,14 @@ class SignalHandler {
     logger.add('verbose', `User ${client.username} is disconnecting, reason: ${reason}`);
     if (client.state !== states.IDLE) {
       client.leaveCall();
+      const call = this.callsOngoing.find(x => (x.caller === client || x.receiver === client));
+      if (call) {
+        try {
+          this.removeCall(call);
+        } catch(e) {
+          logger.add('error', e);
+        }
+      }
     }
     let index = 0, size = this.clients.length;
     for (let i = 0; i < size; i++) {
@@ -246,8 +337,7 @@ class SignalHandler {
         if (err) {
           logger.add('warn', 'Received invalid token!');
           socket.disconnect(true);
-        }
-        else {
+        } else {
           console.log(decoded);
           socket.decodedToken = decoded;
           next();
