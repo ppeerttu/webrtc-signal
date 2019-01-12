@@ -6,7 +6,7 @@
  * this client will be removed after the server is more mature
  */
 const io = require('socket.io-client');
-const REST_API = 'http://localhost:8080';
+const REST_API = 'https://www.perttukarna.com';
 
 let socket = null;
 
@@ -69,14 +69,14 @@ setTimeout(() => {
       headers,
       body: JSON.stringify({ username: myUname })
     };
-    fetch(`${REST_API}/api/auth`, opts)
+    fetch(`${REST_API}/webrtc/api/auth`, opts)
       .then(res => res.json())
       .then(data => {
         console.log(data);
         if (data.token) {
           localStorage.setItem('token', data.token);
-          socket = io('http://localhost:8080', {
-            path: '/signal',
+          socket = io(REST_API, {
+            path: '/webrtc/signal',
             reconnection: false,
             query: {
               token: data.token

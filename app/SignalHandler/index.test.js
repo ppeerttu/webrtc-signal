@@ -1,5 +1,6 @@
 const SignalHandler = require('./index');
 const SignalClient = require('../SignalClient');
+const http = require('http');
 const MockSocket = require('../SignalClient/MockSocket');
 const errors = require('./errors');
 const states = require('../SignalClient/states');
@@ -7,23 +8,33 @@ const states = require('../SignalClient/states');
 describe('SignalHandler', () => {
 
   describe('constructor', () => {
-    test('Should throw an error when no parameters received', () => {
+    test('Should throw an error when no parameters received', async () => {
+      let handler;
       expect(() => {
-        new SignalHandler();
-      }).toThrow();
+        handler = new SignalHandler();
+      }).toThrow(TypeError);
+
+      if (handler) {
+        // It should never come to this, but if it does,
+        // shutdown() must be called
+        await handler.shutdown();
+      }
     });
 
-    test('Should not throw an error when an object given as a parameter', () => {
-      expect(() => {
-        new SignalHandler({});
-      }).not.toThrow();
+    test('Should not throw an error when an object given as a parameter', async () => {
+      const handler = new SignalHandler(http.createServer());
+      await expect(handler.shutdown()).resolves.not.toThrow();
     });
   });
 
   describe('getClientBySocketId', () => {
     let handler;
     beforeAll(() => {
-      handler = new SignalHandler({});
+      handler = new SignalHandler(http.createServer());
+    });
+
+    afterAll(async () => {
+      await handler.shutdown();
     });
 
     test('Should return null when no socket found with given id', () => {
@@ -44,7 +55,11 @@ describe('SignalHandler', () => {
   describe('getClientByUsername', () => {
     let handler;
     beforeAll(() => {
-      handler = new SignalHandler({});
+      handler = new SignalHandler(http.createServer());
+    });
+
+    afterAll(async () => {
+      await handler.shutdown();
     });
 
     test('Should return null when no socket found with given id', () => {
@@ -65,7 +80,7 @@ describe('SignalHandler', () => {
 
   describe('broadcastClientsOnline', () => {
     test('Should broadcast available clients to every client', () => {
-      const handler = new SignalHandler({});
+      const handler = new SignalHandler(http.createServer());
       for (let i = 10; i > 0; i--) {
         handler.clients.push(new SignalClient(new MockSocket(`id-${i}`), `user-${i}`));
       }
@@ -81,10 +96,14 @@ describe('SignalHandler', () => {
   describe('manageCall', () => {
     let handler;
     beforeEach(() => {
-      handler = new SignalHandler({});
+      handler = new SignalHandler(http.createServer());
       handler.clients.push(new SignalClient(new MockSocket('1'), 'Foo'));
       handler.clients.push(new SignalClient(new MockSocket('2'), 'Bar'));
       handler.clients.push(new SignalClient(new MockSocket('3'), 'Biz'));
+    });
+
+    afterEach(async () => {
+      await handler.shutdown();
     });
 
     test('Should not proceed if receiving invalid data', () => {
@@ -145,10 +164,14 @@ describe('SignalHandler', () => {
   describe('manageAnswer', () => {
     let handler;
     beforeEach(() => {
-      handler = new SignalHandler({});
+      handler = new SignalHandler(http.createServer());
       handler.clients.push(new SignalClient(new MockSocket('1'), 'Foo'));
       handler.clients.push(new SignalClient(new MockSocket('2'), 'Bar'));
       handler.clients.push(new SignalClient(new MockSocket('3'), 'Biz'));
+    });
+
+    afterEach(async () => {
+      await handler.shutdown();
     });
 
     test('Should not proceed if receiving invalid data', () => {
@@ -207,8 +230,12 @@ describe('SignalHandler', () => {
   describe('manageCandidate', () => {
     let handler, client;
     beforeAll(() => {
-      handler = new SignalHandler({});
+      handler = new SignalHandler(http.createServer());
       client = new SignalClient(new MockSocket('20'), 'Foo');
+    });
+
+    afterAll(async () => {
+      await handler.shutdown();
     });
 
     test('Should not proceed if receiving invalid candidate', () => {
@@ -231,10 +258,14 @@ describe('SignalHandler', () => {
   describe('prepareClientDisconnect', () => {
     let handler;
     beforeEach(() => {
-      handler = new SignalHandler({});
+      handler = new SignalHandler(http.createServer());
       handler.clients.push(new SignalClient(new MockSocket('1'), 'Foo'));
       handler.clients.push(new SignalClient(new MockSocket('2'), 'Bar'));
       handler.clients.push(new SignalClient(new MockSocket('3'), 'Biz'));
+    });
+
+    afterEach(async () => {
+      await handler.shutdown();
     });
 
     test('Should call SignalClient.leaveCall if client is in call', () => {
@@ -256,10 +287,14 @@ describe('SignalHandler', () => {
   describe('saveCall', () => {
     let handler;
     beforeEach(() => {
-      handler = new SignalHandler({});
+      handler = new SignalHandler(http.createServer());
       handler.clients.push(new SignalClient(new MockSocket('1'), 'Foo'));
       handler.clients.push(new SignalClient(new MockSocket('2'), 'Bar'));
       handler.clients.push(new SignalClient(new MockSocket('3'), 'Biz'));
+    });
+
+    afterEach(async () => {
+      await handler.shutdown();
     });
 
     test('Should throw an error if receiving invalid parameters', () => {
@@ -288,10 +323,14 @@ describe('SignalHandler', () => {
   describe('checkCallAnswered()', () => {
     let handler;
     beforeEach(() => {
-      handler = new SignalHandler({});
+      handler = new SignalHandler(http.createServer());
       handler.clients.push(new SignalClient(new MockSocket('1'), 'Foo'));
       handler.clients.push(new SignalClient(new MockSocket('2'), 'Bar'));
       handler.clients.push(new SignalClient(new MockSocket('3'), 'Biz'));
+    });
+
+    afterEach(async () => {
+      await handler.shutdown();
     });
 
     test('Should throw an error if receiving invalid parameters', () => {
@@ -319,10 +358,14 @@ describe('SignalHandler', () => {
   describe('removeCall()', () => {
     let handler;
     beforeEach(() => {
-      handler = new SignalHandler({});
+      handler = new SignalHandler(http.createServer());
       handler.clients.push(new SignalClient(new MockSocket('1'), 'Foo'));
       handler.clients.push(new SignalClient(new MockSocket('2'), 'Bar'));
       handler.clients.push(new SignalClient(new MockSocket('3'), 'Biz'));
+    });
+
+    afterEach(async () => {
+      await handler.shutdown();
     });
 
     test('Should throw an error if receiving invalid parameters', () => {

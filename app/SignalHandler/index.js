@@ -12,14 +12,33 @@ class SignalHandler {
   constructor(server) {
     if (!server) throw new TypeError('The SignalHandler requires a server as a constructor parameter!');
 
-    this.io = new SocketIO(server.server, {
+    this.io = new SocketIO(server, {
       path: '/webrtc/signal',
       origins: '*:*'
     });
     this.io.use(this.authenticate);
     this.clients = [];
     this.callsOngoing = [];
+    this.intervalId = null;
     this._init();
+  }
+
+  __closeServer() {
+    const self = this;
+    return new Promise(resolve => {
+      self.io.close(() => resolve());
+    });
+  }
+
+  /**
+   * Shutdown the server.
+   * 
+   * Close the server and release all resources.
+   */
+  async shutdown() {
+    clearInterval(this.intervalId);
+    this.intervalId = null;
+    await this.__closeServer();
   }
 
   /**
@@ -31,7 +50,10 @@ class SignalHandler {
       _handler.manageConnection(socket);
     });
 
-    setInterval(() => {
+    // Don't set interval during tests 
+    if (process.env.NODE_ENV === 'test') return;
+
+    this.intervalId = setInterval(() => {
       _handler.callsOngoing.forEach(c => {
         const calls = [];
         if (!c.answered && (c.startedAt < (Date.now() - (30 * 1000)))) {
